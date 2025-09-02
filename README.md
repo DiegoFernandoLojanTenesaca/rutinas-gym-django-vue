@@ -6,16 +6,16 @@ backend en **Django REST Framework** y un frontend en **Vue.js**.
 
 ## 🚀 Tecnologías
 
--   **Backend**: Django 5 + Django REST Framework + MySQL\
--   **Frontend**: Vue.js + Vite\
--   **Auth**: JWT con `python-jose`\
+-   **Backend**: Django 5 + Django REST Framework + MySQL
+-   **Frontend**: Vue.js + Vite
+-   **Auth**: JWT con `python-jose`
 -   **Documentación**: Swagger (drf-yasg)
 
 ## ⚙️ Requisitos
 
--   Python 3.10+\
--   Node.js 18+\
--   MySQL 8+\
+-   Python 3.10+
+-   Node.js 18+
+-   MySQL 8+
 
 ## 📦 Instalación Backend
 
@@ -25,7 +25,8 @@ backend en **Django REST Framework** y un frontend en **Vue.js**.
     python manage.py runserver  
 
 Backend corre en:\
-👉 http://127.0.0.1:8000/\
+👉 http://127.0.0.1:8000/
+
 Swagger docs en:\
 👉 http://127.0.0.1:8000/documentacion/
 
@@ -40,9 +41,9 @@ Frontend corre en:\
 
 ## 📖 Endpoints principales
 
--   `POST /api/v1/seguridad/registro` → Registro de usuario\
--   `POST /api/v1/seguridad/login` → Login y obtención de token\
--   `GET /api/v1/categorias` → Listado de categorías\
+-   `POST /api/v1/seguridad/registro` → Registro de usuario
+-   `POST /api/v1/seguridad/login` → Login y obtención de token
+-   `GET /api/v1/categorias` → Listado de categorías
 -   `POST /api/v1/ejercicios` → Crear ejercicio (requiere JWT)
 
 ## 🛡️ Autenticación
