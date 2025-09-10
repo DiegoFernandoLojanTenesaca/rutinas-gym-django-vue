@@ -1,0 +1,129 @@
+<template>
+  <section class="service_section layout_padding sub_page">
+    <div class="container">
+      <div class="auth_card">
+        <div class="heading_container"><h2>Crear cuenta</h2></div>
+
+        <form @submit.prevent="onSubmit" novalidate>
+          <!-- Nombre -->
+          <div class="form-field">
+            <label for="reg-name" class="sr-only">Nombre</label>
+            <input
+              id="reg-name"
+              v-model.trim="nombre"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="Nombre"
+              class="auth_input"
+              :disabled="loading"
+            />
+          </div>
+
+          <!-- Correo -->
+          <div class="form-field">
+            <label for="reg-email" class="sr-only">Correo</label>
+            <input
+              id="reg-email"
+              v-model.trim="correo"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="Correo"
+              class="auth_input"
+              :disabled="loading"
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="form-field has-append">
+            <label for="reg-pass" class="sr-only">Contraseña</label>
+            <input
+              id="reg-pass"
+              v-model.trim="password"
+              :type="showPassword ? 'text' : 'password'"
+              required
+              autocomplete="new-password"
+              placeholder="Contraseña"
+              class="auth_input"
+              :disabled="loading"
+            />
+            <button
+              type="button"
+              class="append-btn icon"
+              :aria-pressed="showPassword ? 'true' : 'false'"
+              @click="showPassword = !showPassword"
+              :disabled="loading"
+              :title="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <!-- Ojo abierto -->
+              <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <!-- Ojo cerrado -->
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
+                <path d="M10.58 10.58a3 3 0 0 0 4.24 4.24"/>
+                <path d="M23 1 1 23"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Mensajes -->
+          <p v-if="ok" class="alert alert-ok" role="status">
+            Registro exitoso. Revisa tu correo y verifica tu cuenta antes de iniciar sesión.
+          </p>
+          <p v-if="error" class="alert alert-error" role="alert">{{ error }}</p>
+
+          <!-- Acciones -->
+          <div class="actions">
+            <button type="submit" class="btn-1 w-100" :disabled="loading">
+              {{ loading ? 'Enviando…' : 'Registrarme' }}
+            </button>
+          </div>
+
+          <p class="muted small mt-2">
+            ¿Ya tienes cuenta?
+            <RouterLink to="/login">Inicia sesión</RouterLink>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { register } from '@/services/auth'
+
+const nombre = ref('')
+const correo = ref('')
+const password = ref('')
+
+const loading = ref(false)
+const ok = ref(false)
+const error = ref('')
+const showPassword = ref(false)
+
+async function onSubmit () {
+  if (!nombre.value || !correo.value || !password.value) {
+    error.value = 'Completa todos los campos'
+    return
+  }
+  error.value = ''
+  ok.value = false
+  loading.value = true
+  try {
+    await register({ nombre: nombre.value, correo: correo.value, password: password.value })
+    ok.value = true
+    nombre.value = ''
+    correo.value = ''
+    password.value = ''
+  } catch (e) {
+    error.value = e?.message || 'No se pudo registrar'
+  } finally {
+    loading.value = false
+  }
+}
+</script>

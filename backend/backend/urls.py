@@ -27,10 +27,10 @@ urlpatterns = [
 
     # APIs
     path('api/v1/', include('categorias.urls')),
-    path('api/v1/', include('ejercicios.urls')),         # ← reemplaza a recetas
+    path('api/v1/', include('ejercicios.urls')),         
     path('api/v1/', include('contacto.urls')),
     path('api/v1/', include('seguridad.urls')),
-    path('api/v1/', include('ejercicios_helper.urls')),  # ← reemplaza a recetas_helper
+    path('api/v1/', include('ejercicios_helper.urls')), 
 
     # Swagger / OpenAPI
     re_path(r'^documentacion(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

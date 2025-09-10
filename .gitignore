@@ -1,64 +1,26 @@
 # -------------------------------
-# Logs y reports
+# Logs / reports
 # -------------------------------
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+report.*.json
 
 # -------------------------------
-# Runtime data
-# -------------------------------
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# -------------------------------
-# Dependencias y builds Node/Vue
+# Node / Vite / Frontend
 # -------------------------------
 node_modules/
-jspm_packages/
-bower_components/
-web_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
-
-# Cache y outputs de bundlers
 .cache/
 .parcel-cache/
-.vuepress/dist
-.temp/
-.nuxt/
-.svelte-kit/
-.docusaurus/
-.serverless/
-.fusebox/
-.dynamodb/
-.firebase/
-
-# Otros builds
-build/Release/
-out/
-.next/
-dist/
-
-# Yarn v3
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+.vite/
+*.tsbuildinfo
 
 # -------------------------------
 # Python / Django
@@ -75,17 +37,32 @@ __pycache__/
 coverage.xml
 htmlcov/
 
-# DB y entornos
+# DB locales
 *.sqlite3
 db.sqlite3
+
+# -------------------------------
+# Entornos / credenciales
+# -------------------------------
 .env
 .env.*
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
 !.env.example
+!frontend/.env.example
+!backend/.env.example
+.gitattributes
+!.gitattributes
 
-# Media & static (generados en runtime)
+# -------------------------------
+# Media & static generados
+# -------------------------------
 backend/upload/
 media/
 staticfiles/
+backend/staticfiles/
 
 # -------------------------------
 # Virtualenvs
@@ -95,7 +72,7 @@ venv/
 .venv/
 
 # -------------------------------
-# IDEs y sistema
+# IDEs / sistema
 # -------------------------------
 .vscode/
 .idea/
@@ -105,7 +82,8 @@ venv/
 Thumbs.db
 
 # -------------------------------
-# Archivos extra / personales
+# Archivos personales / backups
 # -------------------------------
 *.tmp
 backup_categorias.sql
+.backup_categorias.sql

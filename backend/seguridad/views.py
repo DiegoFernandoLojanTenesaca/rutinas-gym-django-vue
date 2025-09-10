@@ -149,7 +149,8 @@ class Clase2(APIView):
             meta = UsersMetadata.objects.get(token=token, user__is_active=0)
             User.objects.filter(id=meta.user_id).update(is_active=1)
             # Consumir el token
-            UsersMetadata.objects.filter(pk=meta.pk).update(token="")
+            #UsersMetadata.objects.filter(pk=meta.pk).update(token="")
+            UsersMetadata.objects.filter(pk=meta.pk).update(token=None)
 
             frontend_url = os.getenv('BASE_URL_FRONTEND', '')
             return HttpResponseRedirect(frontend_url if frontend_url else '/')
