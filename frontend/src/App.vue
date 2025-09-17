@@ -9,28 +9,29 @@
             <span>Lion GYM</span>
           </RouterLink>
 
-          <div class="contact_nav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <RouterLink class="nav-link" to="/services">
-                  <img src="/assets/images/location.png" alt="" />
-                  <span>Ubicación</span>
-                </RouterLink>
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link" to="/services">
-                  <img src="/assets/images/call.png" alt="" />
-                  <span>Contacto : + 593 939327368</span>
-                </RouterLink>
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link" to="/services">
-                  <img src="/assets/images/envelope.png" alt="" />
-                  <span>lionGym_EC@gmail.com</span>
-                </RouterLink>
-              </li>
-            </ul>
-          </div>
+            <div class="contact_nav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" to="/contact" title="Ver ubicación y contacto">
+                    <img src="/assets/images/location.png" alt="Ubicación" />
+                    <span>Ubicación</span>
+                  </RouterLink>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="tel:+593939327368" title="Llamar">
+                    <img src="/assets/images/call.png" alt="Teléfono" />
+                    <span>Contacto: +593 939327368</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="mailto:lionGym_EC@gmail.com" title="Escribir correo">
+                    <img src="/assets/images/envelope.png" alt="Correo" />
+                    <span>lionGym_EC@gmail.com</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
         </nav>
       </div>
     </header>
@@ -38,7 +39,7 @@
 
     <!-- navbar + (slider solo en Home) -->
     <section class="slider_section position-relative">
-      <div class="container">
+      <div class="container-fluid px-0">
         <div class="custom_nav2">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
@@ -57,25 +58,30 @@
                   <li class="nav-item" :class="{ active: route.name === 'contact' }">
                     <RouterLink class="nav-link" to="/contact">Contáctenos</RouterLink>
                   </li>
-
-                  <!-- Auth: si no está logueado, mostrar Login -->
+                  <li class="nav-item" :class="{ active: route.name === 'explorar' }">
+                    <RouterLink class="nav-link" to="/explorar">Explorar</RouterLink>
+                  </li>
+                  <li class="nav-item" :class="{ active: route.name === 'categorias' || route.name === 'categoria' }">
+                    <RouterLink class="nav-link" to="/categorias">Categorías</RouterLink>
+                  </li>
+                   <!-- Auth: si no está logueado, mostrar Login -->
                   <li class="nav-item" v-if="!auth.isLogged" :class="{ active: route.name === 'login' }">
                     <RouterLink class="nav-link" to="/login">Iniciar Sesión</RouterLink>
                   </li>
                   <!-- Auth: si está logueado, saludo + salir -->
-                  <li class="nav-item" v-else>
-                    <a class="nav-link" href="#" @click.prevent>
-                      Hola, {{ auth.user?.nombre }}
-                    </a>
+                  <li class="nav-item" v-else :class="{ active: route.name === 'perfil' }">
+                    <RouterLink class="nav-link user-pill" to="/perfil">
+                      Bienvenido, {{ auth.user?.nombre }}
+                    </RouterLink>
+                  </li>
+                  <li class="nav-item" :class="{ active: route.name === 'panel' }" v-if="auth.isLogged">
+                    <RouterLink class="nav-link" to="/panel">Mi Panel</RouterLink>
                   </li>
                   <li class="nav-item" v-if="auth.isLogged">
                     <a class="nav-link" href="#" @click.prevent="doLogout">Salir</a>
                   </li>
                 </ul>
 
-                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button"></button>
-                </form>
               </div>
             </div>
           </nav>
@@ -92,55 +98,17 @@
                 <div class="row">
                   <div class="col-lg-6 col-md-7 offset-md-6 offset-md-5">
                     <div class="detail-box">
-                      <h2>Consigue Tu Cuerpo</h2>
-                      <h1>Aquí Fitness</h1>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                      <h2>Entrena mejor, más fácil</h2>
+                      <h1>Rutinas para ti</h1>
+                      <p> Lion GYM te ayuda a descubrir, crear y organizar rutinas de gimnasio. Encuentra ejercicios por categoría, guarda tus favoritos y lleva el control de tu progreso.</p>
                       <div class="btn-box">
-                        <a href="#" class="btn-1">Leer Más</a>
-                        <a href="#" class="btn-2">Solicitar Cotización</a>
+                        <RouterLink to="/explorar" class="btn-1">Explorar rutinas</RouterLink>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="carousel-item">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-6 col-md-7 offset-md-6 offset-md-5">
-                    <div class="detail-box">
-                      <h2>Consigue Tu Cuerpo</h2>
-                      <h1>Aquí Fitness</h1>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-                      <div class="btn-box">
-                        <a href="#" class="btn-1">Leer Más</a>
-                        <a href="#" class="btn-2">Solicitar Cotización</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="carousel-item">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-6 col-md-7 offset-md-6 offset-md-5">
-                    <div class="detail-box">
-                      <h2>Consigue Tu Cuerpo</h2>
-                      <h1>Aquí Fitness</h1>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-                      <div class="btn-box">
-                        <a href="#" class="btn-1">Leer Más</a>
-                        <a href="#" class="btn-2">Solicitar Cotización</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div> <!-- /carousel-inner -->
         </div>
       </div>
@@ -155,11 +123,11 @@
   <section class="info_section layout_padding2-top">
     <div class="container">
       <div class="info_form">
-        <h4>Our Newsletter</h4>
-        <form action="">
-          <input type="text" placeholder="Enter your email" />
+        <h4>¿Quieres recibir nuestras novedades?</h4>
+        <form @submit.prevent>
+          <input type="email" placeholder="Ingresa tu correo" />
           <div class="d-flex justify-content-end">
-            <button>subscribe</button>
+            <button type="submit">Suscribirme</button>
           </div>
         </form>
       </div>
@@ -169,44 +137,52 @@
       <div class="row">
         <div class="col-md-3">
           <h6>Acerca de Lion GYM</h6>
-          <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation u</p>
+          <p>Somos una plataforma para descubrir y gestionar rutinas de gimnasio. Explora ejercicios por categorías, organiza tus entrenamientos y mejora cada día.</p>
         </div>
 
         <div class="col-md-2 offset-md-1">
-          <h6>Menus</h6>
-          <ul>
-            <li :class="{ active: isHome }"><RouterLink to="/">Home</RouterLink></li>
-            <li :class="{ active: route.name === 'about' }"><RouterLink to="/about">Acerca de</RouterLink></li>
-            <li :class="{ active: route.name === 'services' }"><RouterLink to="/services">Servicios</RouterLink></li>
-            <li :class="{ active: route.name === 'contact' }"><RouterLink to="/contact">Contáctenos</RouterLink></li>
-
-            <!-- Auth en footer -->
-            <li v-if="!auth.isLogged" :class="{ active: route.name === 'login' }">
-              <RouterLink to="/login">Iniciar Sesión</RouterLink>
-            </li>
-            <li v-else>
-              <a href="#" @click.prevent="doLogout">Cerrar sesión</a>
-            </li>
-          </ul>
+          <h6>Menú</h6>
+            <ul>
+              <li :class="{ active: isHome }"><RouterLink to="/">Inicio</RouterLink></li>
+              <li :class="{ active: route.name === 'about' }"><RouterLink to="/about">Acerca de</RouterLink></li>
+              <li :class="{ active: route.name === 'categorias' || route.name === 'categoria' }"><RouterLink to="/categorias">Categorías</RouterLink></li>
+              <li :class="{ active: route.name === 'explorar' }"><RouterLink to="/explorar">Explorar</RouterLink></li>
+              <li :class="{ active: route.name === 'contact' }"><RouterLink to="/contact">Contáctenos</RouterLink></li>
+              <li v-if="!auth.isLogged" :class="{ active: route.name === 'login' }">
+                <RouterLink to="/login">Iniciar Sesión</RouterLink>
+              </li>
+              <li v-else :class="{ active: route.name === 'panel' }">
+                <RouterLink to="/panel">Mi Panel</RouterLink>
+              </li>
+            </ul>
         </div>
 
         <div class="col-md-3">
-          <h6>Useful Links</h6>
-          <ul>
-            <li><a href="">Adipiscing</a></li>
-            <li><a href="">Elit, sed</a></li>
-            <li><a href="">do Eiusmod</a></li>
-            <li><a href="">Tempor</a></li>
-            <li><a href="">incididunt</a></li>
-          </ul>
+          <h6>Enlaces útiles</h6>
+            <ul>
+              <li><a href="#">Preguntas frecuentes</a></li>
+              <li><a href="#">Guía de inicio</a></li>
+              <li><a href="#">Soporte</a></li>
+              <li><a href="#">Términos y condiciones</a></li>
+              <li><a href="#">Política de privacidad</a></li>
+            </ul>
         </div>
 
         <div class="col-md-3">
-          <h6>Contact Us</h6>
+          <h6>Contáctanos</h6>
           <div class="info_link-box">
-            <a href=""><img src="/assets/images/location-white.png" alt="" /><span>No.123, loram ipusm</span></a>
-            <a href=""><img src="/assets/images/call-white.png" alt="" /><span>+01 12345678901</span></a>
-            <a href=""><img src="/assets/images/mail-white.png" alt="" /><span>demo123@gmail.com</span></a>
+            <RouterLink to="/contact">
+              <img src="/assets/images/location-white.png" alt="Ubicación" />
+              <span>Loja, Ecuador</span>
+            </RouterLink>
+            <a href="tel:+593939327368">
+              <img src="/assets/images/call-white.png" alt="Teléfono" />
+              <span>+593 939327368</span>
+            </a>
+            <a href="mailto:lionGym_EC@gmail.com">
+              <img src="/assets/images/mail-white.png" alt="Correo" />
+              <span>lionGym_EC@gmail.com</span>
+            </a>
           </div>
           <div class="info_social">
             <div><a href=""><img src="/assets/images/facebook-logo-button.png" alt="" /></a></div>
@@ -220,9 +196,7 @@
   </section>
 
   <section class="container-fluid footer_section">
-    <p>© {{ year }} Todos los derechos reservados
-      <a href="https://html.design/" target="_blank" rel="noopener">(diseño de Free Html Templates)</a>
-    </p>
+    <p>© {{ year }} Todos los derechos reservados</p>
   </section>
 </template>
 

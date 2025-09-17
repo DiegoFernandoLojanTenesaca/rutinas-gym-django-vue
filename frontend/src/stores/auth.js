@@ -47,5 +47,11 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem(LS_TOKEN_KEY);
       applyAuthToken(null);
     },
+
+    updateLocalUser(partial) {
+      this.user = { ...(this.user || {}), ...(partial || {}) };
+      localStorage.setItem('lg_user', JSON.stringify(this.user));
+    },
+
   },
 });

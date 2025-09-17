@@ -24,3 +24,11 @@ export async function getEjercicioPorSlug(slug) {
   const { data } = await res.json()
   return data
 }
+
+export async function listEjercicios(search = '') {
+  const endpoint = url(`ejercicios${search ? `?search=${encodeURIComponent(search)}` : ''}`)
+  const res = await fetch(endpoint)
+  if (!res.ok) throw new Error('No se pudieron cargar ejercicios')
+  const { data } = await res.json()
+  return data // [{id, nombre, slug, imagen, categoria, tiempo, ...}]
+}

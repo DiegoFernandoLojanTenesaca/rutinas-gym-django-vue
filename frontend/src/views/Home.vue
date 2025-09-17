@@ -27,62 +27,84 @@
     </div>
   </section>
 
-  <!-- WHY US -->
-  <section class="us_section layout_padding">
-    <div class="container">
-      <div class="heading_container"><h2>Why Choose Us</h2></div>
-      <div class="us_container">
-        <div class="box"><div class="img-box"><img src="/assets/images/u-1.png" alt=""></div><div class="detail-box"><h5>QUALITY EQUIPMENT</h5><p>ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p></div></div>
-        <div class="box"><div class="img-box"><img src="/assets/images/u-2.png" alt=""></div><div class="detail-box"><h5>HEALTHY NUTRITION PLAN</h5><p>ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p></div></div>
-        <div class="box"><div class="img-box"><img src="/assets/images/u-3.png" alt=""></div><div class="detail-box"><h5>SHOWER SERVICE</h5><p>ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p></div></div>
-        <div class="box"><div class="img-box"><img src="/assets/images/u-4.png" alt=""></div><div class="detail-box"><h5>UNIQUE TO YOUR NEEDS</h5><p>ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p></div></div>
-      </div>
-    </div>
-  </section>
+<!-- WHY US -->
+<section class="us_section layout_padding">
+  <div class="container">
+    <div class="heading_container"><h2>¿Por qué elegir Lion GYM?</h2></div>
 
-  <!-- CONTACT BLOCK (home) -->
-  <section class="contact_section layout_padding" id="contactSection">
-    <div class="container">
-      <div class="heading_container"><h2><span>Get In Touch</span></h2></div>
-      <div class="layout_padding2-top">
-        <div class="row">
-          <div class="col-md-6 ">
-            <form action="">
-              <div class="contact_form-container">
-                <div>
-                  <div><input type="text" placeholder="Name" /></div>
-                  <div><input type="email" placeholder="Email" /></div>
-                  <div><input type="text" placeholder="Phone Number" /></div>
-                  <div class="mt-5"><input type="text" placeholder="Message" /></div>
-                  <div class="mt-5"><button type="submit">Send</button></div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="col-md-6">
-            <div class="map_container">
-              <div class="map-responsive">
-                <iframe
-                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&q=Eiffel+Tower+Paris+France"
-                  width="600" height="300" frameborder="0"
-                  style="border:0; width: 100%; height:100%" allowfullscreen
-                />
-              </div>
-            </div>
-          </div>
+    <div class="us_container">
+      <div class="box">
+        <div class="img-box">
+          <img src="/assets/images/u-1.png" alt="Ejercicios verificados">
+        </div>
+        <div class="detail-box">
+          <h5>EJERCICIOS VERIFICADOS</h5>
+          <p>
+            Catálogo por grupos musculares con imágenes y descripciones claras.
+            Encuentra lo que necesitas en segundos.
+          </p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="img-box">
+          <img src="/assets/images/u-2.png" alt="Planifica tu entrenamiento">
+        </div>
+        <div class="detail-box">
+          <h5>PLANIFICA TU ENTRENAMIENTO</h5>
+          <p>
+            Crea, edita y organiza tus rutinas con series, repeticiones y tiempos.
+            Todo en un solo lugar.
+          </p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="img-box">
+          <img src="/assets/images/u-3.png" alt="Simple y rápido">
+        </div>
+        <div class="detail-box">
+          <h5>SIMPLE Y RÁPIDO</h5>
+          <p>
+            Interfaz limpia y veloz, pensada para móvil y escritorio.
+            Sin distracciones para que te enfoques en entrenar.
+          </p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="img-box">
+          <img src="/assets/images/u-4.png" alt="Hecho a tu medida">
+        </div>
+        <div class="detail-box">
+          <h5>HECHO A TU MEDIDA</h5>
+          <p>
+            Filtra por categorías, guarda tus favoritos y vuelve a ellos cuando quieras.
+            Tus rutinas, a tu estilo.
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getEjerciciosHome } from '../services/ejercicios'
+import { enviarContacto } from '@/services/contacto';
 
 const items = ref([])
 const loading = ref(true)
 const error = ref(false)
+const cNombre = ref('');
+const cCorreo = ref('');
+const cTelefono = ref('');
+const cMensaje = ref('');
+const cOk = ref(false);
+const cErr = ref('');
+
 
 onMounted(async () => {
   try {
@@ -93,4 +115,40 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+async function onEnviar() {
+  cOk.value = false; cErr.value = '';
+  // validación mínima
+  if (!cNombre.value || !cCorreo.value || !cTelefono.value || !cMensaje.value) {
+    cErr.value = 'Completa todos los campos';
+    return;
+  }
+  if (!/^\S+@\S+\.\S+$/.test(cCorreo.value)) {
+    cErr.value = 'Correo inválido';
+    return;
+  }
+  if (!/^[\d\s+\-()]+$/.test(cTelefono.value)) {
+    cErr.value = 'Teléfono inválido';
+    return;
+  }
+
+  cLoading.value = true;
+  try {
+    await enviarContacto({
+      nombre: cNombre.value,
+      correo: cCorreo.value,
+      telefono: cTelefono.value,
+      mensaje: cMensaje.value
+    });
+    cOk.value = true;
+    cNombre.value = cCorreo.value = cTelefono.value = cMensaje.value = '';
+  } catch (e) {
+    cErr.value = e?.message || 'No se pudo enviar';
+  } finally {
+    cLoading.value = false;
+  }
+}
+
+
+
 </script>

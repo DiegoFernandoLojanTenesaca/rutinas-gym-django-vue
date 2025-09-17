@@ -1057,6 +1057,16 @@ a:focus {
   box-shadow:0 10px 28px rgba(0,0,0,.08);
 }
 
+/* Campo bloqueado (solo lectura) */
+.auth_input[disabled],
+.auth_input.is-readonly {
+  background: #f2f2f2;
+  color: #777;
+  cursor: not-allowed;
+  pointer-events: none; /* evita clic y foco */
+}
+
+
 /* Campos */
 .form-field{ margin-bottom:14px; position:relative; }
 .has-append{ position:relative; }                /* contenedor con botón a la derecha */
@@ -1158,3 +1168,268 @@ a:focus {
 /* Separación vertical del card dentro de la sub_page */
 .sub_page .service_section .auth_card{ margin-top:10px; }
 /* ===== /Auth ===== */
+
+/* Utility classes */
+.gap-2 { gap: 8px; }
+.mx-2 { margin-left: 8px; margin-right: 8px; }
+.mt-3 { margin-top: 12px; }
+
+
+/* ======= NAV: ancho completo + sin recortes + scroll horizontal ======= */
+
+/* El bloque amarillo: menos padding y SIN clip-path para que no recorte */
+.custom_nav2 {
+  padding: 0; /* ya damos padding dentro */
+}
+.custom_nav2 .custom_nav-container{
+  padding: 8px 10px;               /* antes 5px 0 */
+  background-color: #f8bc1a;
+  -webkit-clip-path: none !important;
+  clip-path: none !important;
+  border-radius: 0;                /* opcional, bordes rectos */
+  overflow: visible;               /* por si acaso */
+}
+
+/* Que el collapse ocupe todo el ancho */
+.custom_nav2 .navbar-collapse{
+  width: 100%;
+}
+
+/* La UL del menú en una sola línea, con scroll horizontal si no entra */
+.custom_nav2 .navbar-expand-lg .navbar-nav{
+  flex-direction: row;
+  flex-wrap: nowrap;          /* NO envolver */
+  overflow-x: auto;           /* permite hacer scroll */
+  white-space: nowrap;
+  gap: 4px;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+.custom_nav2 .navbar-expand-lg .navbar-nav::-webkit-scrollbar{
+  display: none;              /* Chrome/Safari */
+}
+
+/* Links más compactos para que quepan más */
+.custom_nav2 .navbar-expand-lg .navbar-nav .nav-link{
+  padding: 10px 14px;         /* antes 10px 30px */
+  font-weight: 600;
+}
+@media (min-width: 1200px){
+  .custom_nav2 .navbar-expand-lg .navbar-nav .nav-link{
+    padding: 12px 18px;       /* un poco más en pantallas grandes */
+  }
+}
+
+/* Activo/hover como antes */
+.custom_nav2 .navbar-expand-lg .navbar-nav .nav-item.active .nav-link,
+.custom_nav2 .navbar-expand-lg .navbar-nav .nav-item:hover .nav-link{
+  color: #ffffff;
+}
+
+
+/* En móviles muy pequeños: reduce un poquito el tamaño de fuente */
+@media (max-width: 420px){
+  .custom_nav2 .navbar-expand-lg .navbar-nav .nav-link{
+    padding: 10px 10px;
+    font-size: .95rem;
+  }
+}
+/* Toolbar de filtros (grid flexible) */
+.filters_toolbar{
+  padding: 14px;                 /* lo que ya tenías inline */
+  margin-bottom: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;    /* móvil: una por fila */
+  overflow: visible;             /* por si el navegador del select sale del card */
+}
+
+/* En pantallas medianas/grandes: hasta 3 columnas, cada una con ancho mínimo cómodo */
+@media (min-width: 768px){
+  .filters_toolbar{
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+  }
+}
+
+/* Que los inputs del toolbar no se encojan por debajo del mínimo */
+.filters_toolbar .auth_input{
+  min-width: 0;       /* evita problemas de grid con contenido largo */
+  height: 44px;
+}
+
+/* Asegura que el card no recorte el desplegable del select */
+.auth_card{ overflow: visible; }
+
+
+/* Tarjeta de categoría clickable (quita subrayados, etc.) */
+.cat-card-link { display:block; text-decoration:none; color:inherit; }
+
+/* Contenedor de thumb de categoría: fijamos altura para uniformidad */
+.cat-thumb { height: 170px; }
+@supports (aspect-ratio:16/9){ .cat-thumb{ height:auto; aspect-ratio:16/9; } }
+
+/* Placeholder cuando no hay imagen */
+.cat-placeholder{
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(ellipse at top, #eee, #ddd);
+}
+.cat-inicial{
+  font-size:42px; font-weight:800; color:#000000; letter-spacing:.5px;
+}
+
+/* Insignia de “Sin ejercicios” arriba a la izquierda */
+.cat-badge-empty{
+  position:absolute; top:10px; left:10px;
+  background:#222; color:#fff; font-size:12px; font-weight:700;
+  padding:4px 8px; border-radius:999px; opacity:.9;
+}
+
+/* Pequeño ajuste visual para las tarjetas de categorías */
+.exercise-card:hover .cat-badge-empty{ opacity:1; }
+
+/* Barra de filtros del panel (ancho completo + grid responsivo) */
+.filters_bar{
+  max-width: 100% !important;      /* anula el max-width de .auth_card */
+  margin: 0 0 12px !important;     /* evita centrado del login */
+  padding: 14px !important;
+}
+
+/* Grid interno: una columna en móvil, tres en >=768px */
+.filters_bar .row{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 768px){
+  .filters_bar .row{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* Asegurar que inputs/selects ocupen todo y misma altura */
+.filters_bar .col .auth_input{
+  width: 100%;
+  height: 44px;
+}
+
+/* Opcional: igualar apariencia de <select> a los inputs */
+.filters_bar select.auth_input{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+}
+
+.user-pill{
+  background: rgba(0,0,0,.08);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 600;
+}
+
+/* ==== ABOUT: layout + leones decorativos a ambos lados ==== */
+.about-hero{
+  --lionSize: 260px;              /* tamaño base del león (ambos lados y el de la izquierda) */
+  position: relative;
+  overflow: hidden;               /* por si el león se sale un poco en pantallas angostas */
+}
+
+/* Leones decorativos (fondo) */
+.about-hero::before,
+.about-hero::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--lionSize);
+  height: var(--lionSize);
+  background: url("/assets/images/about-img.png") no-repeat center / contain;
+  opacity: .08;                   /* sutil para no competir con el contenido */
+  pointer-events: none;
+  z-index: 0;                     /* por detrás del contenido */
+}
+
+/* Izquierda y derecha en simetría */
+.about-hero::before{ left: 2vw; }
+.about-hero::after{
+  right: 2vw;
+  transform: translateY(-50%) scaleX(-1); /* espejado para variar */
+}
+
+/* En pantallas grandes, un poco más grandes */
+@media (min-width: 1200px){
+  .about-hero{ --lionSize: 320px; }
+}
+
+/* En móviles ocultamos los leones decorativos para no saturar */
+@media (max-width: 767px){
+  .about-hero::before,
+  .about-hero::after{ display: none; }
+}
+
+/* Contenido por encima de los decorativos */
+.about-hero .container,
+.about-hero .about-wrap{ position: relative; z-index: 1; }
+
+/* ==== Grid y alineación del bloque About ==== */
+.about-hero .about-wrap{
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;  /* imagen izquierda + texto derecha */
+  gap: 28px;
+  align-items: center;
+}
+@media (max-width: 768px){
+  .about-hero .about-wrap{
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* Imagen “principal” de la izquierda (mismo tamaño que los decorativos) */
+.about-hero .img-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about-hero .img-box img{
+  width: var(--lionSize);
+  height: var(--lionSize);
+  object-fit: contain;
+}
+
+/* Texto principal */
+.about-hero .lead{ margin: 0 0 10px; color:#333; }
+
+/* KPIs */
+.about-hero .kpis{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:12px;
+  margin:14px 0 16px;
+}
+@media (max-width: 520px){
+  .about-hero .kpis{ grid-template-columns: 1fr; }
+}
+.about-hero .kpi{
+  background:#fff; border:1px solid #eee; border-radius:12px;
+  padding:12px; text-align:center; box-shadow:0 6px 16px rgba(0,0,0,.05);
+}
+.about-hero .kpi h4{ margin:0; font-size:1.35rem; line-height:1; color:#151615; }
+.about-hero .kpi span{ display:block; margin-top:4px; color:#8a8a8a; font-size:.95rem; }
+
+/* Bullets */
+.about-hero .bullets{ margin: 8px auto 18px; max-width: 640px; padding-left: 18px; }
+@media (max-width: 768px){
+  .about-hero .bullets{ text-align:left; }
+}
+.about-hero .bullets li{ margin:6px 0; }
+
+/* CTAs centradas */
+.about-hero .ctas{
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:2px;
+}

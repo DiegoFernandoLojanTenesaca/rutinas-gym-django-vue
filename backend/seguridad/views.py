@@ -16,7 +16,7 @@ from django.utils import timezone
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+from seguridad.decorators import logueado
 
 class Clase1(APIView):
     permission_classes = [AllowAny]
@@ -245,3 +245,107 @@ class Clase3(APIView):
                 return JsonResponse({'error': 'Error interno del servidor'}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
         return JsonResponse({'error': 'Credenciales inválidas'}, status=HTTPStatus.UNAUTHORIZED)
+    
+
+    # Helper: obtener user_id desde Authorization (mismo esquema que ya usas)
+def _get_user_id_from_request(request):
+    try:
+        header = (request.headers.get('Authorization') or "").split(" ")
+        token = header[1] if len(header) == 2 else ""
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS512'])
+        return int(payload.get("id"))
+    except Exception:
+        return None
+
+
+class PerfilMeView(APIView):
+    """
+    GET  /api/v1/usuarios/me        -> devuelve {id, nombre, correo}
+    PUT  /api/v1/usuarios/me        -> actualiza nombre/correo
+    """
+    permission_classes = [AllowAny]
+
+    @logueado()
+    def get(self, request):
+        user_id = _get_user_id_from_request(request)
+        if not user_id:
+            return JsonResponse({'error': 'No autorizado'}, status=HTTPStatus.UNAUTHORIZED)
+
+        try:
+            u = User.objects.get(pk=user_id)
+            data = {'id': u.id, 'nombre': u.first_name, 'correo': u.email}
+            return JsonResponse({'data': data}, status=HTTPStatus.OK)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=HTTPStatus.NOT_FOUND)
+
+    @logueado()
+    def put(self, request):
+        user_id = _get_user_id_from_request(request)
+        if not user_id:
+            return JsonResponse({'error': 'No autorizado'}, status=HTTPStatus.UNAUTHORIZED)
+
+        nombre = (request.data.get('nombre') or '').strip()
+        correo = (request.data.get('correo') or '').strip()
+
+        if not nombre:
+            return JsonResponse({'error': 'El campo nombre es obligatorio'}, status=HTTPStatus.BAD_REQUEST)
+        if not correo:
+            return JsonResponse({'error': 'El campo correo es obligatorio'}, status=HTTPStatus.BAD_REQUEST)
+
+        try:
+            u = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=HTTPStatus.NOT_FOUND)
+
+        # si cambió el correo, valida que no esté en uso
+        if correo.lower() != (u.email or '').lower():
+            if User.objects.filter(email=correo).exclude(pk=u.id).exists():
+                return JsonResponse({'error': 'El correo ya está en uso'}, status=HTTPStatus.BAD_REQUEST)
+
+        # actualizar (mantenemos username = correo para coherencia)
+        u.first_name = nombre
+        u.email = correo
+        u.username = correo
+        try:
+            u.save()
+            return JsonResponse({'message': 'Perfil actualizado'}, status=HTTPStatus.OK)
+        except Exception:
+            return JsonResponse({'error': 'No se pudo actualizar el perfil'}, status=HTTPStatus.BAD_REQUEST)
+
+
+class CambiarPasswordView(APIView):
+    """
+    PUT /api/v1/usuarios/me/password
+    body: { "actual": "...", "nueva": "..." }
+    """
+    permission_classes = [AllowAny]
+
+    @logueado()
+    def put(self, request):
+        user_id = _get_user_id_from_request(request)
+        if not user_id:
+            return JsonResponse({'error': 'No autorizado'}, status=HTTPStatus.UNAUTHORIZED)
+
+        actual = request.data.get('actual') or ''
+        nueva = request.data.get('nueva') or ''
+        if not actual or not nueva:
+            return JsonResponse({'error': 'Campos actual y nueva son obligatorios'}, status=HTTPStatus.BAD_REQUEST)
+        if len(nueva) < 6:
+            return JsonResponse({'error': 'La nueva contraseña debe tener al menos 6 caracteres'}, status=HTTPStatus.BAD_REQUEST)
+
+        try:
+            u = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=HTTPStatus.NOT_FOUND)
+
+        if not u.check_password(actual):
+            return JsonResponse({'error': 'Contraseña actual incorrecta'}, status=HTTPStatus.UNAUTHORIZED)
+
+        try:
+            u.set_password(nueva)
+            u.save()
+            return JsonResponse({'message': 'Contraseña actualizada'}, status=HTTPStatus.OK)
+        except Exception:
+            return JsonResponse({'error': 'No se pudo actualizar la contraseña'}, status=HTTPStatus.BAD_REQUEST)
+
+

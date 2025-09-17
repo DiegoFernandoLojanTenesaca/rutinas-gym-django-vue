@@ -17,6 +17,7 @@
               placeholder="Correo"
               class="auth_input"
               :disabled="loading"
+              autofocus
             />
           </div>
 
@@ -56,7 +57,7 @@
           </div>
 
           <!-- Mensajes -->
-          <p v-if="error" class="alert alert-error" role="alert">{{ error }}</p>
+          <p v-if="error" class="alert alert-error" role="alert" aria-live="polite">{{ error }}</p>
 
           <!-- Acciones -->
           <div class="actions">
@@ -79,15 +80,24 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useRoute } from 'vue-router'
 
 const router = useRouter()
 const auth = useAuthStore()
+const route = useRoute()
 
 const correo = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref('')
 const showPassword = ref(false)
+
+
+// Mensaje si vienes de una sesión expirada
+if (route.query.reason === 'expired' && !error.value) {
+  error.value = 'Tu sesión expiró. Por favor, inicia sesión nuevamente.'
+}
+
 
 async function onSubmit () {
   if (!correo.value || !password.value) {
@@ -98,7 +108,9 @@ async function onSubmit () {
   loading.value = true
   try {
     await auth.login({ correo: correo.value, password: password.value })
-    router.push('/') // vuelve a Home (o cambia por redirect si quieres)
+    // redirige a la página que intentaba visitar o al home
+    const target = String(route.query.redirect || '/')
+    router.push(target)
   } catch (e) {
     // intenta leer mensaje del backend si viene
     error.value = e?.message || 'No se pudo iniciar sesión'
