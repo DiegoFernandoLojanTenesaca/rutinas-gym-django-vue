@@ -1,203 +1,236 @@
 
 # 🦁 Lion GYM — Django REST + Vue 3 (Vite)
 
-Proyecto **full-stack** para gestionar **ejercicios y rutinas de gimnasio**, con **Django REST Framework + MySQL** en el backend y **Vue 3 + Vite** en el frontend.  
-Incluye **autenticación JWT**, documentación **Swagger**, panel de usuario, buscador, categorías con portada automática y página de contacto.
+> Plataforma full‑stack para **descubrir, crear y organizar rutinas de gimnasio**.  
+> Backend **Django REST + MySQL**, frontend **Vue 3 + Vite**, autenticación **JWT**, y documentación **Swagger**.
+
+<p align="left">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white">
+  <img alt="Django" src="https://img.shields.io/badge/Django-5-092E20?logo=django&logoColor=white">
+  <img alt="DRF" src="https://img.shields.io/badge/DRF-3.x-red">
+  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white">
+  <img alt="Vue" src="https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white">
+</p>
 
 ---
 
-## 📋 Contenido
+## ✨ Características clave
 
-- [Tecnologías](#-tecnologías)
-- [Características](#-características)
-- [Capturas](#-capturas)
-- [Instalación y ejecución](#-instalación-y-ejecución)
-- [Variables de entorno](#-variables-de-entorno)
-- [Endpoints (extracto)](#-endpoints-extracto)
-- [Autenticación (JWT)](#-autenticación-jwt)
-- [Flujo de registro y verificación](#-flujo-de-registro-y-verificación)
-- [Licencia](#-licencia)
-
----
-
-## 🧰 Tecnologías
-
-**Backend**
-- Django 5 + Django REST Framework
-- MySQL 8
-- JWT (JSON Web Token) 
-- Swagger (OpenAPI)
-
-**Frontend**
-- Vue 3 + Vite
-- Pinia (estado) + Vue Router
-- Fetch nativo para servicios
+- **Explorar ejercicios** por nombre y por **categorías** (grid responsiva).  
+- **Detalle de ejercicio** por *slug* con grupos musculares, series/tiempo y foto.  
+- **Categorías con cover**: si no tienen imagen propia, se **toma aleatoria** de los ejercicios de esa categoría.  
+- **Panel del usuario**: CRUD de ejercicios personales, filtros (categoría, texto), orden y paginación.  
+- **Perfil**: edición de nombre y **bloqueo de email** (solo lectura), cambio de contraseña con validaciones.  
+- **Autenticación JWT** (login/registro) con **verificación por correo**.  
+- **Contacto**: formulario + validaciones y mapa (Loja, Ecuador).  
+- **UI limpia** y consistente con tarjetas, sombras suaves y foco accesible.
 
 ---
 
-## ✨ Características
+## 🧱 Arquitectura (alto nivel)
 
-- **Explorar ejercicios** por nombre y categoría, con tarjetas y detalles por *slug*.
-- **Categorías con “cover” automático**: si no hay imagen propia, toma una aleatoria de sus ejercicios.
-- **Panel personal**: CRUD de ejercicios del usuario con filtros y orden.
-- **Perfil**: edición de nombre, **correo bloqueado** y cambio de contraseña.
-- **Contactos**: formulario funcional + mapa incrustado.
-- **Acerca de**: sección informativa con KPIs y llamados a la acción.
-- **Autenticación JWT** y verificación por correo (Mailtrap en dev).
-- **Swagger** con documentación navegable.
-
----
-
-## 🖼️ Capturas
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://i.ibb.co/nqWSQfCr/inicio.png" alt="Inicio" width="420" />
-      <br><sub><b>Inicio</b></sub>
-    </td>
-    <td align="center">
-      <img src="https://i.ibb.co/B5K3zBfW/explorar.png" alt="Explorar" width="420" />
-      <br><sub><b>Explorar ejercicios</b></sub>
-    </td>
-    <td align="center">
-      <img src="https://i.ibb.co/KpYLBdKq/categoria.png" alt="Categorías" width="420" />
-      <br><sub><b>Listado de categorías</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://i.ibb.co/8nSXrKBt/login.png" alt="Login" width="420" />
-      <br><sub><b>Iniciar sesión</b></sub>
-    </td>
-    <td align="center">
-      <img src="https://i.ibb.co/rGPZ5FbJ/cambiodadatos.png" alt="Perfil" width="420" />
-      <br><sub><b>Perfil (correo bloqueado)</b></sub>
-    </td>
-    <td align="center">
-      <img src="https://i.ibb.co/DDss5W6k/ejercicio.png" alt="Detalle de ejercicio" width="420" />
-      <br><sub><b>Detalle de ejercicio</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://i.ibb.co/htbr5fk/final.png" alt="Panel / Cards" width="420" />
-      <br><sub><b>Panel con tarjetas</b></sub>
-    </td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+```
+Frontend (Vue 3 + Vite + Pinia)
+   │
+   ├── Servicios fetch nativo (Bearer JWT)
+   │
+Backend (Django REST Framework) ── MySQL 8
+   ├── /ejercicios, /categorias, /seguridad, /contacto
+   └── JWT HS512 (24h) + Swagger
+```
 
 ---
 
-## 🚀 Instalación y ejecución
+## 🧰 Requisitos
+
+- **Python** 3.11+
+- **Node.js** 18+ y **npm**
+- **MySQL** 8 (local o contenedor)
+
+---
+
+## ⚙️ Configuración rápida
 
 ### 1) Backend
 
 ```bash
 cd backend
-python -m venv ../entorno            # opcional (venv fuera del backend)
-source ../entorno/bin/activate       # Linux/macOS
-# .\..\entorno\Scripts\activate  # Windows PowerShell
+# (opcional) entorno virtual
+python -m venv ../entorno && source ../entorno/bin/activate  # Windows: ..\entorno\Scripts\activate
 
+# dependencias (el repo incluye requirements en la raíz)
 pip install -r ../requirements.txt
+
+# migraciones y arranque
 python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 ```
 
-- API: **http://127.0.0.1:8000/**
+- API base: **http://127.0.0.1:8000/**
 - Swagger: **http://127.0.0.1:8000/documentacion/**
+
+**Variables de configuración recomendadas** (en tu `settings.py` o env):
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`  
+- `SECRET_KEY`  
+- `BASE_URL_FRONTEND` (por ej. `http://127.0.0.1:5173`)  
+- Credenciales de correo (sandbox tipo Mailtrap) para verificación.
+
+---
 
 ### 2) Frontend
 
 ```bash
 cd frontend
 npm install
+# crea .env.local con la URL del backend:
+# VITE_API_BASE=http://127.0.0.1:8000/api/v1
 npm run dev -- --host
 ```
 
-- Frontend: **http://127.0.0.1:5173/**
-
-> Para build de producción: `npm run build` (sirve desde `dist/` con el servidor de tu preferencia).
+- App: **http://127.0.0.1:5173/**
 
 ---
 
-## 🔧 Variables de entorno
-
-**Backend – `settings.py` / `.env`**
-- `DATABASES` → MySQL local
-- `BASE_URL_FRONTEND` → URL a donde se redirige tras verificar cuenta (p.ej. `http://127.0.0.1:5173/login`)
-- Mail (sandbox) → Mailtrap u otro
-- CORS/CSRF → incluye el host del frontend
-
-**Frontend – `.env`**
-```
-VITE_API_BASE=http://127.0.0.1:8000/api/v1/
-```
-
----
-
-## 🔗 Endpoints (extracto)
+## 🔗 Endpoints principales (extracto)
 
 **Auth**
-- `POST /api/v1/seguridad/registro` → Registro (envía email de verificación)
-- `GET  /api/v1/seguridad/verificacion/<token>` → Verifica y **redirecciona** a `BASE_URL_FRONTEND`
-- `POST /api/v1/seguridad/login` → Devuelve `{ id, nombre, token }`
+- `POST /api/v1/seguridad/registro` — registro (envía email con enlace)
+- `GET  /api/v1/seguridad/verificacion/<token>` — activa y **redirige** a `BASE_URL_FRONTEND`
+- `POST /api/v1/seguridad/login` — devuelve `{ id, nombre, token }`
 
 **Ejercicios**
-- `GET  /api/v1/ejercicios` → Listado (`?search=` opcional)
-- `POST /api/v1/ejercicios` → Crear (**Bearer JWT**)
-- `GET  /api/v1/ejercicios/<id>` → Detalle por ID
-- `PUT  /api/v1/ejercicios/<id>` → Actualizar (**JWT**)
-- `DELETE /api/v1/ejercicios/<id>` → Eliminar (**JWT**)
-
-**Helpers ejercicios**
-- `GET /api/v1/ejercicios-home` → 3 aleatorios para la Home
-- `GET /api/v1/ejercicios/slug/<slug>` → Detalle por **slug**
-- `GET /api/v1/ejercicios-panel/<user_id>` → Por usuario (**JWT**)
-- `POST /api/v1/ejercicios/editar/foto` → Cambiar solo foto (**JWT**)
-- `GET /api/v1/ejercicios-buscador?categoria_id=&search=` → Buscador
+- `GET  /api/v1/ejercicios?search=…`
+- `GET  /api/v1/ejercicios/slug/<slug>`
+- `POST /api/v1/ejercicios` (JWT)
+- `PUT  /api/v1/ejercicios/<id>` (JWT)
+- `DELETE /api/v1/ejercicios/<id>` (JWT)
+- `GET  /api/v1/ejercicios-home` — 3 aleatorios para la Home
+- `GET  /api/v1/ejercicios-buscador?categoria_id=&search=` — listado por categoría/busca
+- `GET  /api/v1/ejercicios-panel/<user_id>` — del usuario (JWT)
 
 **Categorías**
-- `GET /api/v1/categorias`
-- `POST /api/v1/categorias` (crear)
-- `GET /api/v1/categorias/<id>` (detalle)
-- `PUT /api/v1/categorias/<id>` (actualizar)
-- `DELETE /api/v1/categorias/<id>` (valida que no tenga ejercicios)
+- `GET  /api/v1/categorias`
+- `POST /api/v1/categorias` (JWT)
+- `GET  /api/v1/categorias/<id>`
+- `PUT  /api/v1/categorias/<id>` (JWT)
+- `DELETE /api/v1/categorias/<id>` (JWT; valida que no tenga ejercicios)
 
 **Contacto**
 - `POST /api/v1/contacto`
 
 ---
 
-## 🔒 Autenticación (JWT)
+## 👀 Capturas (UI)
 
-Enviar en headers para endpoints protegidos:
+> Tamaño reducido para mejor lectura. Haz clic en cualquier imagen para verla completa.
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://i.ibb.co/nqWSQfCr/inicio.png" target="_blank">
+        <img src="https://i.ibb.co/nqWSQfCr/inicio.png" width="420" alt="Inicio">
+      </a>
+      <br><sub><b>Inicio</b> — héroe con CTA</sub>
+    </td>
+    <td align="center">
+      <a href="https://i.ibb.co/8nSXrKBt/login.png" target="_blank">
+        <img src="https://i.ibb.co/8nSXrKBt/login.png" width="420" alt="Login">
+      </a>
+      <br><sub><b>Autenticación</b> — login</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://i.ibb.co/TD98wQ2r/REGISTRO.png" target="_blank">
+        <img src="https://i.ibb.co/TD98wQ2r/REGISTRO.png" width="420" alt="Registro">
+      </a>
+      <br><sub><b>Registro</b> — creación de cuenta</sub>
+    </td>
+    <td align="center">
+      <a href="https://i.ibb.co/rGPZ5FbJ/cambiodadatos.png" target="_blank">
+        <img src="https://i.ibb.co/rGPZ5FbJ/cambiodadatos.png" width="420" alt="Perfil">
+      </a>
+      <br><sub><b>Perfil</b> — datos y cambio de contraseña</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://i.ibb.co/explorar.png" target="_blank">
+        <img src="https://i.ibb.co/B5K3zBfW/explorar.png" width="420" alt="Explorar">
+      </a>
+      <br><sub><b>Explorar</b> — listado con filtros</sub>
+    </td>
+    <td align="center">
+      <a href="https://i.ibb.co/XZK4JJqR/busqueda.png" target="_blank">
+        <img src="https://i.ibb.co/XZK4JJqR/busqueda.png" width="420" alt="Búsqueda">
+      </a>
+      <br><sub><b>Búsqueda</b> — resultados</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://i.ibb.co/KpYLBdKq/categoria.png" target="_blank">
+        <img src="https://i.ibb.co/KpYLBdKq/categoria.png" width="420" alt="Categorías">
+      </a>
+      <br><sub><b>Categorías</b> — grid con cover automático</sub>
+    </td>
+    <td align="center">
+      <a href="https://i.ibb.co/DDss5W6k/ejercicio.png" target="_blank">
+        <img src="https://i.ibb.co/DDss5W6k/ejercicio.png" width="420" alt="Detalle">
+      </a>
+      <br><sub><b>Detalle</b> — ejercicio por slug</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://i.ibb.co/htbr5fk/final.png" target="_blank">
+        <img src="https://i.ibb.co/htbr5fk/final.png" width="420" alt="Footer">
+      </a>
+      <br><sub><b>Footer</b> — suscripción y enlaces</sub>
+    </td>
+    <td align="center">
+      <a href="https://i.ibb.co/B5K3zBfW/explorar.png" target="_blank">
+        <img src="https://i.ibb.co/B5K3zBfW/explorar.png" width="420" alt="Explorar (extra)">
+      </a>
+      <br><sub><b>Explorar</b> — tarjetas responsivas</sub>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🗂️ Estructura (resumen)
+
+```
+backend/
+  seguridad/      ← auth, verificación, JWT
+  ejercicios/     ← ejercicios (slug), helpers home/buscador
+  categorias/     ← CRUD categorías
+  contacto/       ← endpoint de contacto
+frontend/
+  src/
+    views/        ← páginas (Home, About, Categorías, Panel, etc.)
+    services/     ← fetch nativo (http, ejercicios, categorías, perfil…)
+    stores/       ← Pinia (auth)
+```
+
+---
+
+## 🔒 Autenticación
+
+Enviar el token en los endpoints protegidos:
 
 ```
 Authorization: Bearer <token>
 ```
 
-- Algoritmo: **HS512**
-- Expiración: **1 día**
-- El decorador `@logueado()` valida **formato**, **firma** y **expiración**.
+- Firma **HS512**
+- Expira en **24h**
+- Decorador `@logueado()` valida formato, firma y expiración.
 
 ---
 
-## 🧭 Flujo de registro y verificación
-
-1. Registro en `/seguridad/registro`.
-2. Se envía un correo (Mailtrap en dev) con enlace:  
-   `GET /api/v1/seguridad/verificacion/<token>`
-3. Al abrirlo, el backend **activa** la cuenta y redirige a `BASE_URL_FRONTEND` (p.ej. `/login`).
-4. Ya puede iniciar sesión en `/seguridad/login` y obtener el JWT.
-
-> Si ves *“Error interno del servidor”* al verificar, revisa que `BASE_URL_FRONTEND` apunte a una URL válida.
-
----
-
-
-## 📄 Licencia
+## 📜 Licencia
 
 Este proyecto está bajo la licencia incluida en `LICENSE`.
