@@ -16,8 +16,6 @@ Incluye **autenticación JWT**, documentación **Swagger**, panel de usuario, bu
 - [Endpoints (extracto)](#-endpoints-extracto)
 - [Autenticación (JWT)](#-autenticación-jwt)
 - [Flujo de registro y verificación](#-flujo-de-registro-y-verificación)
-- [Prueba rápida](#-prueba-rápida)
-- [Troubleshooting](#-troubleshooting)
 - [Licencia](#-licencia)
 
 ---
